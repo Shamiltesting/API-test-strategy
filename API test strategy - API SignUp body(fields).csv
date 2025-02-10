@@ -1,0 +1,32 @@
+,,,,,,,,,
+,Requarments ,,,,Table of equivalence classes and boundary values for variables using pairwise testing,,,,
+,,,,,First name,Last name,Email,Password ,repeat Password
+,"First name: string, minLength: 2, maxLength: 20",,,,2 symbols(Valid),2 symbols(Valid),Valid(example shamiltesting@gmail.com),"8 symbolsl(includes A-Z, a- z, 0-9)(Valid)",Match with password(Valid)
+,"Last name: string, minLength: 2, maxLength: 20",,,,3 symbols(Valid),3 symbols(Valid),Upper case(example SHAMILTESTING14@gmail.com)(Valid),"9 symbols(includes A-Z, a- z, 0-9)(Valid)",Not match(Not valid) 
+,EMAIL: string,,,,19 symbols(Valid),19 symbols(Valid),Valid/Using sub domain(shamiltesting@gmail.com.ua),"14 symbols(includes A-Z, a- z, 0-9)(Valid)","Match but different case
+(example: MyPass_123 and 
+myPass_123)(Not valid)"
+,"PASSWORD: string, minLength: 8, maxLength: 15, 
+includes one form A-Z, includes one form a-z,
+includes one form 0-9, includes any symbols",,,,20 symols(Valid),20 symols(Valid),Using ._- in local part(Valid),"15 symbols(includes A-Z, a- z, 0-9)(Valid)",
+,repeat password: same as a password ,,,,Space(Not valid),Space(Not valid),Enter space after valid email(should cut space)(Valid),"7 symbols(includes A-Z, a- z, 0-9)(Not valid)",
+,,,,,1 symbol(Not valid),1 symbol(Not valid),Without local part(only @gmail.com)(Not valid),"16 symbols(includes A-Z, a- z, 0-9)(Not valid)",
+,,,,,21 symbol(Not valid),21 symbol(Not valid),Without @(Not valid),"8-15(includes only A-Z, a-z without digits)(Not valid)",
+,,,,,Null(Not valid),Null(Not valid),Without “gmail” part(Not valid),"8-15(includes only A-Z, digits without a-z)(Not valid)",
+,,,,,"Data type is number 
+not string(Not valid)","Data type is number 
+not string(Not valid)",Without “.com” part(Not valid),"8-15(includes only a-z, digits without A-Z)(Not valid)",
+,,,,,"Data type is boolean 
+not string(Not valid)","Data type is boolean 
+not string(Not valid)",Space inside local part(shamil testing@gmail.com)(Not valid),"8-15(includes any different language, 0-9)(Not valid)",
+,,,,,"Empty/undefined
+(Not valid)","Empty/undefined
+(Not valid)",Special characters in local part(Not valid),Null(Not valid),
+,,,,,,,Dot before and after local part(Not valid),Only space(Not valid),
+,,,,,,,Two consecutive dots in the local part(Not valid),Match with email(Not valid),
+,,,,,,,Null(Not valid),Data type is number not string(Not valid),
+,,,,,,,Only space(Not valid),Data type is boolean not string(Not valid),
+,,,,,,,Already existed(Not valid),Empty/undefined(Not valid),
+,,,,,,,Data type is number not string(Not valid),,
+,,,,,,,Data type is boolean not string(Not valid),,
+,,,,,,,Without dot(example shamiltesting@gmailcom)(Not valid),,

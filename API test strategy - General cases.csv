@@ -1,0 +1,149 @@
+,,,,
+,,Scenario,Actions,Expected result
+,,1 case: positive ,"Enter a valid data: Method, URI/URL, Body(depending on the method), Headers","Response: 201 Created(POST, PUT), 200 OK(GET, PUT, PATCH, DELETE), correct body message(depending on the method), 
+headers and request/response time"
+,,2 case: negative,Put incorrect schema. In URL text http instead https or vice versa,"Response 1: 301 Moved Permanently or 302 Found- automatically redirect user to https resource. Authomatically redirect
+Response 2: 403 Forbidden or 400 Bad Request- ""message"": ""Please use HTTPS instead of HTTP."" It is used for strict prohibition
+Response 3: 426 Upgrade Required- ""message"": ""Please use HTTPS instead of HTTP."" It is used when want to inform user"
+,,3 case: negative,Enter incorrect endpoint(URI/URL) ,Response: 404 Not Found. The response (body/headers) should not display information that is only available with the correct URI/URL
+,,4 case: negative,Select and send method that is not supported on these path(URL),Response: 405 Method Not Allowed
+,,5 case: negative,Send PUT or PATCH request to edit a non-existent element,"Response: 
+ 2. 404 Not Found"
+,,6 case: negative,Send DELETE request to remove a non-existent element,"Response: 
+ 1. 204 No Content
+ 2. 404 Not Found"
+,,7 case: negative,"Send unsupported or incorrect headers: 
+ 1. Content-Length has incorrect value data(not number)
+ 2. Host has incorrect value 
+ 3. Accept contains data types that the server cannot provide
+ 4. Content-Type includes data types(value) which server not supported
+ 5. Authorization unclides incorrect data. Token is not included, incorrect, or expired
+ 6. Cookie. Token is not included, incorrect, or expired","Response: 
+ 1. 400 Bad Request
+ 2. 404 Not Found
+ 3. 406 Not Acceptable 
+ 4. 415 Unsupported Media Type
+ 5. 401 Unauthorized
+ 6. 401 Unauthorized"
+,,8 case: negative,"How the system behaves when attempting to create or update data that already exists:
+ 1. Send POST request to create resource
+ 2. Send POST request with similar parameters as an 1st request
+ 3. Send PUT or PATCH request to change an element's name to one that already exists in the system  ","Response 1: 201 Created.
+Response 2: 409 Conflict. ""message"": ""The name 'nnnn""' is already taken."" 
+Response 3: 409 Conflict. ""message"": ""The name 'nnnn""' is already taken."" "
+,,9 case: negative,"In Password variable(field) enter easy password(qwerty123 ect.) or match with user email. 
+For security of system","Response 1: 400 Bad Request- ""message"": ""This password is not secure. Please choose a stronger one.""
+Response 2: 422 Unprocessable Entity- ""message"": ""This password is not secure. Please choose a stronger one."""
+,,10 case: negative,"Usually the type data of variables in JSON is ""string"". Instead ""string"" enter any other 
+type of data(number, boolean, null, undefined). Do same with another types of data
+(example from number to ""string"")","Response 1: 400 Bad Request
+Response 2: 500 Internal Server Error"
+,,9 case: positive/negative,"
+Send POST, PUT, or PATCH request with a non-Latin alphabet value in a ""string"" to create
+or modify a resource in the system","Response 1: 201 Created
+Response 2: 200 OK
+Response 3: 400 Bad Request"
+,,9 case: positive/negative,"Send a POST, PUT, PATCH, or DELETE request on behalf of a role that have and 
+does not have access to the resource (function or data). For user permission testing","Response 1: 201 Created
+Response 2: 200 OK
+Response 3: 403 Forbidden"
+,,11 case: positive/general,"Send GET method to observe created, changed or deleted resource(entity/element) 
+by id or using GET method which bringback all list of resources which include
+manipulated resource","Response 1: 200 OK:
+ - Response body should contain the created resource if it was POST method
+ - Response body should contain the edited(updated) resource if it was PUT/PATCH method
+ - Response body should not include the removed resource if it was DELETE method"
+,,12 case: positive/negative,"Send a POST, PUT, PATCH, or DELETE request and check on UI side 
+(if it implemented already) how resource created, updated or removed. 
+And vice versa from FrontEnd to BackEnd","Response: 
+ 1. On the UI side, the changes made by the API are displayed correctly
+ 2. On the backend side, the changes made by the frontend are displayed correctly"
+,, The pagination params testing,,
+,,"""Filter"" cases","Send a GET method to check the filtration by status or somethinig else
+(for example: status = ""active"") ","Response: 
+ 1. 200 OK- it should present the elements with ""active"" status. If ""no active"" status elements present- its BUG"
+,,,"Send a GET request with a non-existent filter value (for example: status = ""notexistvalue"")","Response: 
+ 1. 200 OK- the empty array should be present"
+,,,"Send a GET request with invalid data type: number, null, boolean(for example: status = 1234)","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid parameter: 'status' must be a string."""
+,,,"Send a GET request where value with upper character case(for example: status = ""Active"")","Response: 
+ 1. 200 OK
+ 2. 400 Bad Request"
+,,"""SORT"" scenarios","What to Pay Attention to When Testing Sorting: 
+1. Sorting Numeric Fields: Check fields like price, quantity, id. 
+2. Sorting String Fields: Verify alphabetical sorting by name, title, category
+3. Sorting by Dates: Ensure the correct order for fields like created_at, updated_at
+4. Stability Check: If values are the same, the order of other fields should remain unchanged",
+,,,Send GET request where ascending sort(ASC)(for example: sort=field_name&order=asc),"Response:
+ 1. 200 OK- it should present the element in ascending order. If not- its BUG"
+,,,Send GET request where descending sort(DESC)(for example: sort=field_name&order=asc),"Response:
+ 1. 200 OK- it should present the element in descending order. If not- its BUG"
+,,,"Send GET request where non-existent sort value(field), ascending(ASC)/descending(DESC)
+(for example: sort=notexist_name&order=asc)","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid sort field: 'unknown_field'."""
+,,,Send GET request with incorrect order value(for example: sort=notexist_name&order=incorrect),"Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid order parameter. Use 'asc' or 'desc'."""
+,,"""OFFSET"" cases",Imagine that there are 100 elements in the database,
+,,,Send  GET request where offset equal 0,"Response:
+ 1. 200 OK- all elements from database should presented. If not- its BUG"
+,,,Send  GET request where offset equal 50,"Response:
+ 1. 200 OK- the 50 elements from database should presented. If not- its BUG"
+,,,Send  GET request where offset equal 100,"Response:
+ 1. 200 OK- the empty array should be presented/any element arent present. If not- its BUG"
+,,,Send  GET request where offset value is more than value is greater than the permissible,"Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Offset exceeds the maximum allowed value."""
+,,,Send  GET request where offset equal -1(negative integer) ,"Response: 
+ 1. 400 Bad Request- ""message(error)"": ""'offset' must be a non-negative integer."""
+,,,"Send  GET request where offset data type is incorrect. The ""string"" instead number ect","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid parameter type. 'offset' must be a number."""
+,,"""LIMIT"" cases",Imagine that there are 100 elements in the database  ,
+,,,Send  GET request where limit equal 10,"Response:
+ 1. 200 OK- only 10 elements should be presented. If not- its BUG"
+,,,Send  GET request where limit equal 101,"Response:
+ 1. 200 OK- the all ements from database should be presented. If not- it's BUG"
+,,,Send two times with different pages GET request where limit equal 10 ,"Response:
+ 1. 200 OK- compare the results and ensure that the data is unique and consistent on each pages. If not- its BUG"
+,,,"Send GET request to a page that is out of data bounds. For example: 
+GET /api/elements?limit=10&page=10000000(out from bounds)","Response:
+ 1. 200 OK- the empty array should be presented/any element arent present"
+,,,"Send two times GET request and second should be with using the id of last element 
+from first request(cursor). For example 1st request: GET /api/elements?limit=10, 
+2nd request: GET /api/elements?limit=10&cursor=10","Response:
+ 1. 200 OK- make sure the data does not overlap with the previous response"
+,,,"Send a GET request to check that the default limit is applied(10 elements, for example)","Response:
+ 1. 200 OK- the empty array should be presented/any element arent present. If not- its BUG"
+,,,"
+Send  GET request where limit equal -1(negative integer) ","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""'limit' must be a non-negative integer."""
+,,,"Send  GET request where limit data type is incorrect. The ""string"" instead number ect","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid parameter type. 'limit' must be a number."""
+,,"""LIMIT"" + ""OFFSET"" cases",Imagine that there are 100 elements in the database,
+,,,Send  GET request where limit equal 10 and offset equal 0,"Response:
+ 1. 200 OK- only 10 elements should be presented. If not- its BUG"
+,,,Send  GET request where limit equal 10 and offset equal 10,"Response:
+ 1. 200 OK-  should present from 11 to 20  elements. If not- its BUG
+  Make sure the data does not overlap with the previous set and that the offset works correctly"
+,,,Send  GET request where limit equal 50 and offset equal 10,"Response:
+ 1. 200 OK-  ensure that the first 50 elements are skipped and the next 10 are returned. If not- its BUG"
+,,,Send  GET request where limit equal 0 and offset equal 0,"Response:
+ 1. 200 OK-  the empty array should be presented/any element arent present. If not- its BUG"
+,,,Send  GET request where limit equal 10 and offset equal 101,"Response:
+ 1. 200 OK-  the empty array should be presented/any element arent present. If not- its BUG"
+,,,"Send GET request where limit equal 10 and offset value is more than value is 
+greater than the permissible(GET /api/products?limit=10&offset=1500)","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Offset exceeds the maximum allowed value."""
+,,,Send  GET request where limit equal positive integer and offset equal -1(negative integer) ,"Response: 
+ 1. 400 Bad Request- ""message(error)"": ""'offset' must be a non-negative integer."""
+,,,"Send  GET request where limit and offset data type is incorrect. The ""string"" instead number ect","Response: 
+ 1. 400 Bad Request- ""message(error)"": ""Invalid parameter type. 'limit' and 'offset' must be a number."""
+,,,"Send 3 times GET requests: 1. GET /api/elements?limit=5&offset=0
+2. GET /api/elements?limit=5&offset=5 
+3. GET /api/elements?limit=5&offset=10","Response:
+ 1. 200 OK-  The data should be sequential and not overlap with each other. If the data is sorted by id, 
+  the ids should be in increasing order. If not- its BUG"
+,, CORS testing,,
+,,Send any cross domain request method to server,,"Response:
+ 1. 200 OK-  the next headers should presented: 
+  Access-Control-Allow-Origin 
+  Access-Control-Allow-Methods 
+  Access-Control-Allow-Headers"
